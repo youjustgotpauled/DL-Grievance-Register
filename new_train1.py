@@ -2,7 +2,6 @@
 """
 Created on Sun Feb 16 02:38:07 2020
 
-@author: Indrajithu
 """
 
 from gr_pr import TrafficSignNet
@@ -69,7 +68,7 @@ def load_split(basePath, csvPath):
 # construct the argument parser and parse the arguments
 # initialize the number of epochs to train for, base learning rate,
 # and batch size
-NUM_EPOCHS = 15
+NUM_EPOCHS = 150
 INIT_LR = 1e-3
 BS = 32
 
@@ -83,8 +82,8 @@ testPath ="test2.csv"
 
 # load the training and testing data
 print("[INFO] loading training and testing data...")
-(trainX, trainY) = load_split(r"C:\Users\Anirudh\Desktop\daksh_extra - final",trainPath)
-(testX, testY) = load_split(r"C:\Users\Anirudh\Desktop\daksh_extra - final",testPath)
+(trainX, trainY) = load_split(r"C:\Users\Anirudh\Desktop\daksh_extra-final",trainPath)
+(testX, testY) = load_split(r"C:\Users\Anirudh\Desktop\daksh_extra-final",testPath)
 
 # scale data to the range of [0, 1]
 
@@ -122,7 +121,7 @@ print("[INFO] compiling model...")
 opt = Adam(lr=INIT_LR, decay=INIT_LR / (NUM_EPOCHS * 0.5))
 #opt=SGD(lr=INIT_LR, decay=INIT_LR / (NUM_EPOCHS * 0.5),momentum=0.9, nesterov=True)
 model = TrafficSignNet.build(width=64, height=64, depth=3,classes=numLabels)
-model.compile(loss="categorical_crossentropy", optimizer=opt,metrics=["accuracy"])
+model.compile(loss="categorical_crossentropy", optimizer=opt,metrics=["accuracy","loss"])
 
 #trainX=np.expand_dims(trainX,axis=3)
 #trainY=np.expand_dims(trainY,axis=2)
@@ -132,10 +131,9 @@ model.compile(loss="categorical_crossentropy", optimizer=opt,metrics=["accuracy"
 
 
 
-model_checkpoint = ModelCheckpoint('Daksh.h5', monitor='loss',verbose=1, save_best_only=True)
-model.fit_generator(aug.flow(trainX,trainY,batch_size=BS),epochs=NUM_EPOCHS,steps_per_epoch=529,callbacks=[model_checkpoint])
+model_checkpoint = ModelCheckpoint('Daksh1.h5', monitor='loss',verbose=1, save_best_only=True)
+model.fit_generator(aug.flow(trainX,trainY,batch_size=BS),epochs=NUM_EPOCHS,callbacks=[model_checkpoint])
 #callbacks=[model_checkpoint]
-#steps_per_epoch=529
 # evaluate the network
 
 print("[INFO] evaluating network...")
